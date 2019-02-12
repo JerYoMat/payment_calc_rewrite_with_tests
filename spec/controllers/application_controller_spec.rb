@@ -9,8 +9,13 @@ describe ApplicationController do
       user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
       loan1=Loan.create(:loan_face_value => 1000, :loan_term => 12, :annual_rate => 10, :lender_name => "test bank 1", :user_id => user.id)
       loan2=Loan.create(:loan_face_value => 2000, :loan_term => 6, :annual_rate => 10, :lender_name => "test bank 2", :user_id => user.id)
+      visit '/login'
 
-      get "/users/#{user.slug}"
+      fill_in(:username, :with => "becky567")
+      fill_in(:password, :with => "kittens")
+      click_button 'submit'
+      
+      get "/users/#{user.id}"
 
       expect(last_response.body).to include("test bank 1")
       expect(last_response.body).to include("test bank 2")
