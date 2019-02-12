@@ -1,5 +1,6 @@
-<%if logged_in?%>
+<%if session[:user_id]%>
   
 <% else %>
 <%= erb :'shared/not_logged_in'%>
+
 <% end %>
