@@ -6,7 +6,6 @@ class Loan < ActiveRecord::Base
   validates :loan_term, numericality: {greater_than: 0}
   validates :annual_rate, numericality: {greater_than: 0}
   validates :annual_rate, numericality: {less_than: 100}
-  validates :total_amount, numericality: {less_than: 100}
   validates :lender_name, presence: true 
 
 end 
