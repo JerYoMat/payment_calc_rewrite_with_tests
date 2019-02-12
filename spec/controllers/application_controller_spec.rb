@@ -257,7 +257,7 @@ describe ApplicationController do
     context "logged in" do
       it 'lets a user delete their own loan if they are logged in' do
         user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        loan = Loan.create(:content => "tweeting!", :user_id => 1)
+        loan=Loan.create(:loan_face_value => 1000, :loan_term => 12, :annual_rate => 10, :lender_name => "test bank 1", :user_id => user.id)
         visit '/login'
 
         fill_in(:username, :with => "becky567")
@@ -266,32 +266,31 @@ describe ApplicationController do
         visit 'loans/1'
         click_button "Delete Loan"
         expect(page.status_code).to eq(200)
-        expect(Loan.find_by(:content => "tweeting!")).to eq(nil)
+        expect(Loan.find_by(:lender_name => "test bank 1")).to eq(nil)
       end
 
       it 'does not let a user delete a loan they did not create' do
         user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        tweet1 = Loan.create(:content => "tweeting!", :user_id => user1.id)
-
+        loan1=Loan.create(:loan_face_value => 1000, :loan_term => 12, :annual_rate => 10, :lender_name => "test bank 1", :user_id => user1.id)
         user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
-        tweet2 = Loan.create(:content => "look at this tweet", :user_id => user2.id)
+        loan2=Loan.create(:loan_face_value => 2000, :loan_term => 6, :annual_rate => 10, :lender_name => "test bank 2", :user_id => user2.id)
 
         visit '/login'
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
         click_button 'submit'
-        visit "loans/#{tweet2.id}"
-        click_button "Delete Loan"
-        expect(page.status_code).to eq(200)
-        expect(Loan.find_by(:content => "look at this tweet")).to be_instance_of(Loan)
-        expect(page.current_path).to include('/loans')
+        visit "loans/#{loan2.id}"
+        
+        
+        
+        expect(page.current_path).to eq('/')
       end
     end
 
     context "logged out" do
       it 'does not load let user delete a loan if not logged in' do
-        loan = Loan.create(:content => "tweeting!", :user_id => 1)
+        loan=Loan.create(:loan_face_value => 1000, :loan_term => 12, :annual_rate => 10, :lender_name => "test bank 1", :user_id => 1)
         visit '/loans/1'
         expect(page.current_path).to eq("/login")
       end
