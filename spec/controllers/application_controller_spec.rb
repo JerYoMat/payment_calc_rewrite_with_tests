@@ -142,10 +142,10 @@ describe ApplicationController do
 
   describe 'show action' do
     context 'logged in' do
-      it 'displays a single tweet' do
+      it 'displays a single loan' do
 
         user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        loan = Loan.create(:content => "i am a boss at tweeting", :user_id => user.id)
+        loan=Loan.create(:loan_face_value => 1000, :loan_term => 12, :annual_rate => 10, :lender_name => "test bank 1", :user_id => user.id)
 
         visit '/login'
 
@@ -156,15 +156,15 @@ describe ApplicationController do
         visit "/loans/#{loan.id}"
         expect(page.status_code).to eq(200)
         expect(page.body).to include("Delete Loan")
-        expect(page.body).to include(loan.content)
+        expect(page.body).to include(loan.loan_face_value)
         expect(page.body).to include("Edit Loan")
       end
     end
 
     context 'logged out' do
-      it 'does not let a user view a tweet' do
+      it 'does not let a user view a loan' do
         user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        loan = Loan.create(:content => "i am a boss at tweeting", :user_id => user.id)
+        loan=Loan.create(:loan_face_value => 1000, :loan_term => 12, :annual_rate => 10, :lender_name => "test bank 1", :user_id => user.id)
         get "/loans/#{loan.id}"
         expect(last_response.location).to include("/login")
       end
