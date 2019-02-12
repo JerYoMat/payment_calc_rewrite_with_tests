@@ -11,8 +11,7 @@ gem 'shotgun'
 gem 'pry'
 gem 'bcrypt'
 gem "tux"
-gem 'sassc', '~> 2.0'
-gem 'font-awesome-sass'
+
 
 
 group :test do
