@@ -1,0 +1,49 @@
+<div class=row>
+<div class="col-md-3"></div>
+<div class="card col-md-6 mt-4">
+<article class="card-body">
+	<h4 id="title-test" class="card-title text-center mb-4 mt-1"></h4>
+	<hr>
+	
+	<form action='/loans' method="POST">
+    <div class="form-group">
+	<div class="input-group">
+		<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-university"></i> </span>
+		 </div>
+		<input name="lender_name" class="form-control" type="text" value = <%= @loan.lender_name %>>
+	</div> 
+	</div>
+	<div class="form-group">
+	<div class="input-group">
+		<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-dollar-sign"></i> </span>
+		 </div>
+		<input name="loan_face_value" class="form-control"  type="number" value= <%= @loan.loan_face_value %> >
+	</div> 
+	</div> 
+	<div class="form-group">
+	<div class="input-group">
+		<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-calendar"></i> </span>
+		 </div>
+	    <input name="loan_term" class="form-control" type="number" value= <%= @loan.loan_term %> >
+	</div> 
+	</div> 
+    <div class="form-group">
+	<div class="input-group">
+		<div class="input-group-prepend">
+		    <span class="input-group-text"> <i class="fa fa-percentage"></i> </span>
+		 </div>
+	    <input name="annual_rate" class="form-control" type="number" value= <%= @loan.annual_rate %>>
+	</div> 
+	</div>
+	<div class="form-group">
+	<button type="submit" class="btn btn-primary btn-block">Submit</button>
+	</div> <!-- form-group// -->
+	
+	</form>
+</article>
+</div> <!-- card.// -->
+<div class="col-md-3"></div>
+</div>
