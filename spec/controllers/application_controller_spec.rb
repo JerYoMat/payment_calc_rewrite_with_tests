@@ -22,7 +22,7 @@ describe ApplicationController do
     context 'logged in' do
       it 'lets a user view only their loans if logged in' do
         user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        tweet1 = Loan.create(:content => "tweeting!", :user_id => user1.id)
+    
         loan1=Loan.create(:loan_face_value => 1000, :loan_term => 12, :annual_rate => 10, :lender_name => "test bank 1", :user_id => user1.id)
         
 
@@ -175,7 +175,7 @@ describe ApplicationController do
     context "logged in" do
       it 'lets a user view loan edit form if they are logged in' do
         user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        loan = Loan.create(:content => "tweeting!", :user_id => user.id)
+        loan=Loan.create(:loan_face_value => 1000, :loan_term => 12, :annual_rate => 10, :lender_name => "test bank 1", :user_id => user.id)
         visit '/login'
 
         fill_in(:username, :with => "becky567")
@@ -183,46 +183,49 @@ describe ApplicationController do
         click_button 'submit'
         visit '/loans/1/edit'
         expect(page.status_code).to eq(200)
-        expect(page.body).to include(loan.content)
+        expect(page.body).to include(loan.lender_name)
       end
 
       it 'does not let a user edit a loan they did not create' do
+        
         user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        tweet1 = Loan.create(:content => "tweeting!", :user_id => user1.id)
-
+        loan1=Loan.create(:loan_face_value => 1000, :loan_term => 12, :annual_rate => 10, :lender_name => "test bank 1", :user_id => user1.id)
         user2 = User.create(:username => "silverstallion", :email => "silver@aol.com", :password => "horses")
-        tweet2 = Loan.create(:content => "look at this tweet", :user_id => user2.id)
-
+        loan2=Loan.create(:loan_face_value => 2000, :loan_term => 6, :annual_rate => 10, :lender_name => "test bank 2", :user_id => user2.id)
+        
         visit '/login'
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
         click_button 'submit'
-        visit "/loans/#{tweet2.id}/edit"
+        visit "/loans/#{loan2.id}/edit"
         expect(page.current_path).to include('/loans')
       end
 
       it 'lets a user edit their own loan if they are logged in' do
         user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        loan = Loan.create(:content => "tweeting!", :user_id => 1)
-        visit '/login'
+        loan=Loan.create(:loan_face_value => 2000, :loan_term => 6, :annual_rate => 10, :lender_name => "test bank 2", :user_id => user.id)
 
         fill_in(:username, :with => "becky567")
         fill_in(:password, :with => "kittens")
         click_button 'submit'
         visit '/loans/1/edit'
 
-        fill_in(:content, :with => "i love tweeting")
+        fill_in(:loan_face_value, :with => 1000)
+        fill_in(:loan_term, :with => 12)
+        fill_in(:annual_rate, :with => 10)
+        fill_in(:lender_name, :with => "testing edit of authorized user")
 
         click_button 'submit'
-        expect(Loan.find_by(:content => "i love tweeting")).to be_instance_of(Loan)
-        expect(Loan.find_by(:content => "tweeting!")).to eq(nil)
+        expect(Loan.find_by(:lender_name => "testing edit of authorized user")).to be_instance_of(Loan)
+        expect(Loan.find_by(:lender_name => "test bank 2")).to eq(nil)
         expect(page.status_code).to eq(200)
       end
 
       it 'does not let a user edit a text with blank content' do
         user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
-        loan = Loan.create(:content => "tweeting!", :user_id => 1)
+        loan=Loan.create(:loan_face_value => 1234, :loan_term => 6, :annual_rate => 10, :lender_name => "test no blank submit", :user_id => user.id)
+        
         visit '/login'
 
         fill_in(:username, :with => "becky567")
@@ -232,8 +235,12 @@ describe ApplicationController do
 
         fill_in(:content, :with => "")
 
+
+        fill_in(:loan_face_value, :with => "")
+        
+
         click_button 'submit'
-        expect(Loan.find_by(:content => "i love tweeting")).to be(nil)
+        expect(Loan.find_by(:lender_name => "test no blank submit").loan_face_value).to eq(1234)
         expect(page.current_path).to eq("/loans/1/edit")
       end
     end
